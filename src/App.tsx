@@ -1,32 +1,34 @@
 import React from "react";
 import { ThemeProvider } from "@material-ui/core/styles";
+import { theme } from "./utils/theme";
+import "./assets/css/style.css";
+import Header from "./components/header/index";
+import Footer from "./components/footer/index";
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-import "./assets/css/style.css";
-import { theme } from "./utils/theme";
 import MainNavigation from "./components/MainNavigation";
-import Header from "./components/header";
-import Footer from "./components/footer";
+import { AuthWrapper } from "./context/auth";
 
-function App() {
+const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <React.Suspense fallback={<></>}>
         <BrowserRouter>
-          <div className="wrapper">
-            <Header />
-            <main>
-              <MainNavigation />
-            </main>
-            <Footer />
-          </div>
+          <AuthWrapper>
+            <div className="wrapper">
+              <Header />
+              <main>
+                <MainNavigation />
+              </main>
+              <Footer />
+            </div>
+          </AuthWrapper>
           <ToastContainer />
         </BrowserRouter>
       </React.Suspense>
     </ThemeProvider>
   );
-}
+};
 
 export default App;

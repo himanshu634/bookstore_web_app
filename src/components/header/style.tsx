@@ -311,8 +311,8 @@ const headerStyle = makeStyles((theme) => ({
         },
       },
       "& .header-search-wrapper": {
-        position:"relative",
-        zIndex:"2",
+        position: "relative",
+        zIndex: "2",
         backgroundColor: colors.grayBg,
         padding: "20px 0",
         "@media(max-width:1199px)": {
@@ -506,4 +506,3 @@ const headerStyle = makeStyles((theme) => ({
 }));
 
 export { headerStyle };
- 
