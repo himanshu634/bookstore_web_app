@@ -11,22 +11,21 @@ import { TextField, Button } from "@material-ui/core";
 import Shared from "../../utils/shared";
 import { AuthContextModel, useAuthContext } from "../../context/auth";
 import { RoutePaths } from "../../utils/enum";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
-// import { BookModel } from "../../models/BookModel";
-// import bookService from "../../service/book.service";
 import { BookModel } from "../../models/BookModel";
-// import { CartContextModel, useCartContext } from "../../context/cart";
+import bookService from "../../service/book.service";
+import { CartContextModel, useCartContext } from "../../context/cart";
 
 const Header: React.FC = () => {
 	const classes = headerStyle();
 	const authContext: AuthContextModel = useAuthContext();
-	// const cartContext: CartContextModel = useCartContext();
+	const cartContext: CartContextModel = useCartContext();
 	const [open, setOpen] = useState<boolean>(false);
 	const [query, setquery] = useState<string>("");
 	const [bookList, setbookList] = useState<BookModel[]>([]);
 	const [openSearchResult, setOpenSearchResult] = useState<boolean>(false);
-
+	const [loading, setLoading] = useState<boolean>(false)
 	const history = useHistory();
 
 	// for mobile menu
@@ -42,41 +41,43 @@ const Header: React.FC = () => {
 	}, [authContext.user]);
 
 	const logOut = () => {
-		// authContext.signOut();
-		// cartContext.emptyCart();
+		cartContext.emptyCart();
+		authContext.signOut();
 	};
 
-	// const getBooks = async () => {
-	// 	const res = await bookService.getAll({
-	// 		pageIndex: 1,
-	// 		pageSize: 10,
-	// 		keyword: query,
-	// 	});
-	// 	setbookList(res.records);
-	// };
+	const getBooks = async () => {
+		const res = await bookService.getAll({
+			pageIndex: 1,
+			pageSize: 10,
+			keyword: query,
+		});
+		setLoading(false)
+		setbookList(res.records);
+	};
 
 	const search = () => {
+		setLoading(true)
 		document.body.classList.add("search-results-open");
-		// getBooks();
+		getBooks();
 		setOpenSearchResult(true);
 	};
 
-	// const addToCart = (book: BookModel): void => {
-	// 	if (!authContext.user.id) {
-	// 		toast.error("Please login before adding books to cart");
-	// 		history.push(RoutePaths.Register);
-	// 		return;
-	// 	} else {
-	// 		Shared.addToCart(book, authContext.user.id).then((res) => {
-	// 			if (res.error) {
-	// 				toast.error(res.message);
-	// 			} else {
-	// 				toast.success(res.message);
-	// 				cartContext.updateCart();
-	// 			}
-	// 		});
-	// 	}
-	// };
+	const addToCart = (book: BookModel): void => {
+		if (!authContext.user.id) {
+			toast.error("Please login before adding books to cart");
+			history.push(RoutePaths.Register);
+			return;
+		} else {
+			Shared.addToCart(book, authContext.user.id).then((res) => {
+				if (res.error) {
+					toast.error(res.message);
+				} else {
+					toast.success(res.message);
+					cartContext.updateCart();
+				}
+			});
+		}
+	};
 
 	return (
 		<div className={classes.headerWrapper}>
@@ -169,12 +170,13 @@ const Header: React.FC = () => {
 									{openSearchResult && (
 										<>
 											<div className="product-listing">
-												{bookList?.length == 0 && (
+												{bookList?.length == 0 && !loading && (
 													<p className="no-product">No product found</p>
 												)}
-
-												<p className="loading">Loading....</p>
-												<List className="related-product-list">
+												{loading ?
+													(<p className="loading">Loading....</p>)
+													: (
+													<List className="related-product-list">
 													{bookList?.length > 0 &&
 														bookList.map((item: BookModel) => {
 															return (
@@ -190,7 +192,7 @@ const Header: React.FC = () => {
 																			</span>
 																			<Link
 																				to="/"
-																				// onClick={() => addToCart(item)}
+																				onClick={() => addToCart(item)}
 																			>
 																				Add to cart
 																			</Link>
@@ -199,7 +201,10 @@ const Header: React.FC = () => {
 																</ListItem>
 															);
 														})}
-												</List>
+													</List>
+												) }
+												
+												
 											</div>
 										</>
 									)}

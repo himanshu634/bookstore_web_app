@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MainNavigation from "./components/MainNavigation";
 import { AuthWrapper } from "./context/auth";
+import { CartWrapper } from "./context/cart"
 
 const App: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ const App: React.FC = () => {
       <React.Suspense fallback={<></>}>
         <BrowserRouter>
           <AuthWrapper>
+            <CartWrapper>
             <div className="wrapper">
               <Header />
               <main>
@@ -23,6 +25,7 @@ const App: React.FC = () => {
               </main>
               <Footer />
             </div>
+            </CartWrapper>
           </AuthWrapper>
           <ToastContainer />
         </BrowserRouter>

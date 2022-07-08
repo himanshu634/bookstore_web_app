@@ -1,6 +1,6 @@
 import { BookModel } from "../models/BookModel";
 import UserModel from "../models/UserModel";
-// import cartService from "../service/cart.service";
+import cartService from "../service/cart.service";
 import { Role, RoutePaths } from "./enum";
 
 export default class Shared {
@@ -52,24 +52,24 @@ export default class Shared {
 		}
 		return true;
 	};
-	// public static addToCart = (
-	// 	book: BookModel,
-	// 	id: number
-	// ): Promise<{ error: boolean; message: string }> => {
-	// 	return cartService
-    //   .add({
-    //     userId: id,
-    //     bookId: book.id as number,
-    //     quantity: 1,
-    //   })
-    //   .then((res) => {
-    //     return { error: false, message: "Item added in cart" };
-    //   })
-    //   .catch((e) => {
-    //     if (e.status === 500)
-    //       return { error: true, message: "Item already in the cart" };
-    //     else
-    //       return { error: true, message: "something went wrong" };
-    //   });
-	// };
+	public static addToCart = (
+		book: BookModel,
+		id: number
+	): Promise<{ error: boolean; message: string }> => {
+		return cartService
+      .add({
+        userId: id,
+        bookId: book.id as number,
+        quantity: 1,
+      })
+      .then((_res) => {
+        return { error: false, message: "Item added in cart" };
+      })
+      .catch((e) => {
+        if (e.status === 500)
+          return { error: true, message: "Item already in the cart" };
+        else
+          return { error: true, message: "something went wrong" };
+      });
+	};
 }

@@ -36,12 +36,12 @@ export const AuthWrapper: React.FC<React.PropsWithChildren<{}>> = ({
       _setUser(user);
    };
 
-   // useEffect(() => {
-   //   const token = localStorage.getItem(Shared.LocalStorageKeys.USER);
-   //   if (user.id && !token) {
-   //     signOut();
-   //   }
-   // }, [localStorage.getItem(Shared.LocalStorageKeys.USER)]);
+   useEffect(() => {
+     const token = localStorage.getItem(Shared.LocalStorageKeys.USER);
+     if (user.id && !token) {
+       signOut();
+     }
+   }, [localStorage.getItem(Shared.LocalStorageKeys.USER)]);
 
    useEffect(() => {
       const itemStr: UserModel =

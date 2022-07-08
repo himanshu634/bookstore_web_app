@@ -17,8 +17,6 @@ class AuthService {
   public async getAllRoles(): Promise<Role[]> {
      const url = `${this.ENDPOINT}/getallroles`;
      return request.get<Role[]>(url).then((res) => {
-        //TODO REMOVE IT
-        console.log(res.data);
       return res.data;
     });
   }
@@ -26,12 +24,13 @@ class AuthService {
   public async getById(id: number): Promise<UserModel> {
     const url = `${this.ENDPOINT}/${id}`;
     return request.get<UserModel>(url).then((res) => {
+      console.log(res.data);
       return res.data;
     });
   }
 
   public async delete(id: number): Promise<UserModel> {
-    const url = `${this.ENDPOINT}/Delete/${id}`;
+    const url = `${this.ENDPOINT}/delete/${id}`;
     return request.delete<UserModel>(url).then((res) => {
       return res.data;
     });

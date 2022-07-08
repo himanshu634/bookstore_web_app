@@ -8,10 +8,13 @@ import { LoginModel } from "../../models/AuthModel";
 import * as Yup from "yup"
 import { toast } from "react-toastify";
 import authService from "../../service/auth.service"
+import { useAuthContext } from "../../context/auth";
+
 
 const Login = () => {
    const classes = loginStyle();
    const history = useHistory()
+   const authContext = useAuthContext();
    const initialValues: LoginModel = new LoginModel()
 
    const validationSchema = Yup.object().shape({
@@ -25,7 +28,7 @@ const Login = () => {
 
    const onSubmit = (values: LoginModel): void => {
       authService.login(values).then((res) => {
-         // authContext.setUser(res);
+         authContext.setUser(res);
          history.push("/");
          toast.success("Successfully logged in");
       }).catch((error) => {

@@ -23,13 +23,13 @@ import { AuthContextModel, useAuthContext } from "../../context/auth";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
 import { RoutePaths } from "../../utils/enum";
-// import cartService from "../../service/cart.service";
+import cartService from "../../service/cart.service";
 import Shared from "../../utils/shared";
-// import { CartContext, CartContextModel, useCartContext } from "../../context/cart";
+import { CartContext, CartContextModel, useCartContext } from "../../context/cart";
 
 const BookList: React.FC = () => {
    const authContext: AuthContextModel = useAuthContext();
-   // const cartContext: CartContextModel= useCartContext();
+   const cartContext: CartContextModel= useCartContext();
    const history = useHistory();
    const classes = productListingStyle();
    const materialClasses = materialCommonStyles();
@@ -49,9 +49,7 @@ const BookList: React.FC = () => {
    const GetBooks = () => {
       bookService.getAll(filters).then((res) => setBookList(res));
    };
-   //TODO remove it
-   console.log(bookList);
-
+ 
    useEffect(() => {
       const timer: NodeJS.Timeout = setTimeout(() => {
          if (filters.keyword === "") delete filters.keyword;
@@ -86,22 +84,22 @@ const BookList: React.FC = () => {
       return [];
    }, [categories, bookList]);
 
-   // const addToCart = (book: BookModel): void => {
-   // 	if (!authContext.user.id) {
-   // 		toast.error("Please login before adding books to cart");
-   // 		history.push(RoutePaths.Register);
-   // 		return;
-   // 	} else {
-   // 		Shared.addToCart(book, authContext.user.id).then(res=>{
-   // 			if(res.error){
-   // 				toast.error(res.message)
-   // 			}else{
-   // 				toast.success(res.message)
-   // 				cartContext.updateCart()
-   // 			}
-   // 		})
-   // 	}
-   // };
+   const addToCart = (book: BookModel): void => {
+   	if (!authContext.user.id) {
+   		toast.error("Please login before adding books to cart");
+   		history.push(RoutePaths.Register);
+   		return;
+   	} else {
+   		Shared.addToCart(book, authContext.user.id).then(res=>{
+   			if(res.error){
+   				toast.error(res.message)
+   			}else{
+   				toast.success(res.message)
+   				cartContext.updateCart()
+   			}
+   		})
+   	}
+   };
 
    const sortBooks = (e: any) => {
       setSortBy(e.target.value);
@@ -183,7 +181,7 @@ const BookList: React.FC = () => {
                               <button className="MuiButtonBase-root MuiButton-root MuiButton-contained btn pink-btn MuiButton-containedPrimary MuiButton-disableElevation">
                                  <span
                                     className="MuiButton-label"
-                                 // onClick={() => addToCart(book)}
+                                 onClick={() => addToCart(book)}
                                  >
                                     ADD TO CART
                                  </span>
