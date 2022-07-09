@@ -1,13 +1,11 @@
-import { CartModel, GetCart } from "../models/CartModel";
+import { CartList, CartModel, GetCart } from "../models/CartModel";
 import request from "./request";
 
 class CartService {
  ENDPOINT = "api/cart";
 
- //todo remove console
  public async add(data: CartModel): Promise<CartModel> {
     const url = `${this.ENDPOINT}/add`;
-    console.log('adding');
   return request
    .post<CartModel>(url, data)
    .then((res) => {
@@ -20,9 +18,12 @@ class CartService {
  }
 
  public async getList(id: number): Promise<GetCart> {
-  const url = `${this.ENDPOINT}/list?userId=${id}`;
-  return request.get<GetCart>(url).then((res) => {
-   return res.data;
+  const url = `${this.ENDPOINT}/getbyid/${id}`;
+   return request.get<CartList[]>(url).then((res) => {
+     var getCart = new GetCart();
+     getCart.records = res.data;
+     getCart.totalRecords = res.data.length;
+    return getCart;
   });
  }
 
@@ -39,10 +40,10 @@ class CartService {
    }
 
  public async removeItem(id: number): Promise<CartModel> {
-  const url = `${this.ENDPOINT}?id=${id}`;
+  const url = `${this.ENDPOINT}/delete?id=${id}`;
   return request
    .delete<CartModel>(url)
-   .then((res) => {
+    .then((res) => {
     return res.data;
    })
    .catch((e) => {

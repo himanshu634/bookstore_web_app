@@ -123,7 +123,7 @@ const Header: React.FC = () => {
 										<ListItem className="cart-link">
 											<Link to="/cart" title="Cart">
 												<img src={cartIcon} alt="cart.png" />
-												{/* <span>{cartContext.cartData.totalRecords}</span> */}
+												<span>{cartContext.cartData.totalRecords}</span>
 												Cart
 											</Link>
 										</ListItem>
